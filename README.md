@@ -51,11 +51,11 @@ Si par contre on désire que l'exception soit traitée par les blocs de niveaux 
 
 Le mécanisme décrit ci-dessus, correspond aux exceptions contrôlées. Celles-ci doivent hériter de la classe java.lang.Exception. Par contre, les exceptions non contrôlées, comme leur non l'indique n'oblige pas le compilateur à exiger des blocks try/catch. Les exceptions non contrôlées (héritant de RuntimeException) peuvent ne pas être interceptées ou traitées.
 
-Hello PetStore !
+HelloExceptions !
 Cet exemple vous montre les différences de code entre une exception contrôlée et non contrôlée!
 
 ```Java 
-public class HelloPetstore {
+public class HelloExceptions {
   // Point d'entrée de l'application
   public static void main(String args) {
     // si vous passez l'argument "controlee"
@@ -82,7 +82,7 @@ public class HelloPetstore {
 }
 ```
 
-Exécutez ce programme en lui passant le paramètre « controlee » (java HelloPetstore controlee)(1) la méthode privée controlee() est appelée (2). Cette méthode lance une exception contrôlée (3) et, est donc obligée de la déclarer dans sa signature (4). La classe Exception est la classe mère de toutes les exceptions contrôlées. L'appel de cette méthode doit donc être entouré d'un block try/catch (5).
+Exécutez ce programme en lui passant le paramètre « controlee » (java HelloExceptionsslm controlee)(1) la méthode privée controlee() est appelée (2). Cette méthode lance une exception contrôlée (3) et, est donc obligée de la déclarer dans sa signature (4). La classe Exception est la classe mère de toutes les exceptions contrôlées. L'appel de cette méthode doit donc être entouré d'un block try/catch (5).
 
 À l'opposé, si vous passez un autre paramètre au programme, la méthode noncontrolee() est appelée (6). Elle lance une RuntimeException (classe mère des exceptions non contrôlées) et n'a pas besoin de la déclarer dans sa signature (7). L'appel n'a donc pas besoin d'être entouré d'un block try/catch.
 
