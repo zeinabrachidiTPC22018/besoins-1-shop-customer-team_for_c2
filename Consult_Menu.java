@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author zeina
  */
-public class Create_Menu implements ChooseListener{
+public class Consult_Menu implements ChooseListener{
     private ArrayList<ChooseListener> listeners = new ArrayList<ChooseListener>();
     
     public void addListener(ChooseListener choice) {
@@ -30,7 +30,7 @@ public class Create_Menu implements ChooseListener{
      * @throws IOException
      */
     public void Choose() throws IOException {
-        System.out.println("in create menu");
+        System.out.println("in consult menu");
         int choice=menu();
         listeners.forEach((c1) -> c1.MyChoice(choice));
        
@@ -49,7 +49,7 @@ public class Create_Menu implements ChooseListener{
          */
         System.out.println("0 - Quitter");
         System.out.println("-------------------------");
-        System.out.println("1 - Ajouter Client");
+        System.out.println("1 - Consulter Client");
         System.out.println("2 - Help");
         System.out.println("3 - Retourner au menu principal");
         System.out.print("Choisir : ");
@@ -61,7 +61,7 @@ public class Create_Menu implements ChooseListener{
     @Override
     public void MyChoice(int choice) {
         int selection;
-        Create_Menu cm ;
+        Consult_Menu con_m ;
         Main_menu mm;
         try {   
             while (choice != 0) {
@@ -71,10 +71,9 @@ public class Create_Menu implements ChooseListener{
                     case 2:
                         break;
                     case 3:
+                        con_m = new Consult_Menu();
                         mm = new Main_menu();
-                        cm = new Create_Menu();
-                        mm.removeListener(cm);
-                        cm.addListener(mm);
+                        con_m.addListener(mm);
                         mm.Choose();
                         break;
                 }
