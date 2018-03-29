@@ -14,5 +14,5 @@ public interface GEventListener {
      *
      * @param ev
      */
-    abstract public void action(GEvent ev);
+    public void action(GEvent ev);
 }

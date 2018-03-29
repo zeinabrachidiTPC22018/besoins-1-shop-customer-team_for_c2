@@ -1,4 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+/**
+ *
+ * @author zeina
+ */
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -16,11 +25,11 @@ import java.util.logging.Logger;
  * @param <D>
  */
 
-public class Menu_creer<D> implements Runnable , GEventListener{
+public class Menu_modifier<D> implements Runnable , GEventListener{
 
     Source eventManager;
 
-    public Menu_creer(Source<D> s) {
+    public Menu_modifier(Source<D> s) {
         eventManager = s;
     }
     public int menu() throws IOException {
@@ -36,7 +45,7 @@ public class Menu_creer<D> implements Runnable , GEventListener{
          */
         System.out.println("0 - Quitter");
         System.out.println("-------------------------");
-        System.out.println("1 - Ajouter Client");
+        System.out.println("1 - Modifier Client");
         System.out.println("2 - Afficher clients");
         System.out.println("3 - Retourner au menu principal");
         System.out.print("Choisir : ");
@@ -50,14 +59,22 @@ public class Menu_creer<D> implements Runnable , GEventListener{
         int choix;
         MenuPrincipal mp;
         Clients_hm chm;
+        Client c;
+        Scanner kb;
+        String s ;
         GEvent ev=eventManager.genEvent("Aucune réponse connue");
         try {
             while ((choix = menu()) != 0) {
                 switch (choix) {
                     case 1:
-                        ev = eventManager.genEvent("Ajouter Client");
+                        ev = eventManager.genEvent("Modifier Client");
                         chm= new Clients_hm();
-                        chm.createClient();
+                        kb = new Scanner(System.in);       
+                        System.out.println("saisir id du client à modifier");
+                        s = kb.nextLine();
+                        c=chm.findClient(s);
+                        chm.displayClient(c);
+                        chm.updateClient(c);
                         break;
                     case 2:
                         ev = eventManager.genEvent("Afficher clients");

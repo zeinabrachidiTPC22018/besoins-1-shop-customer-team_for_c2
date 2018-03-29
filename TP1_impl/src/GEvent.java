@@ -14,6 +14,17 @@ public class GEvent<S extends Source<D>,D> {
 
     private S _source;
     private D _data;
+    
+    public GEvent(S source, D data) {
+        _source = source;
+        _data = data;
+    }
+    
+    public GEvent(S source) {
+        _source = source;
+        _data = null;
+    }
+    
     /**
      * @return the _source
      */
@@ -40,16 +51,5 @@ public class GEvent<S extends Source<D>,D> {
      */
     public void setData(D _data) {
         this._data = _data;
-    }
-    
-    public GEvent(S source, D data) {
-        _source = source;
-        _data = data;
-    }
-    
-    public GEvent(S source) {
-        _source = source;
-        _data = null;
-    }
-      
+    }    
 }

@@ -46,19 +46,19 @@ public class MenuPrincipal<D> implements Runnable {
 
     @Override
     public void run() {
-        Menu_creer mc;
-        EventListener_impl eli;
-        int choix;
         GEvent ev=eventManager.genEvent("Aucune réponse connue");
+        int choix;
+        Menu_creer mc;
         try {
             while ((choix = menu()) != 0) {
                 switch (choix) {
                     case 1:
-                        mc = new Menu_creer();
-                        ev = eventManager.genEvent(mc);
-                        eli = new EventListener_impl();
-                        eli.action(ev);
-                        //ev = eventManager.genEvent("Créer");
+                        ev = eventManager.genEvent("Créer");
+                        mc = new Menu_creer(eventManager);
+                        eventManager.addGEventListener((gEvent) -> gEvent.getData());
+                        Thread t = new Thread(mc);
+                        t.start();
+                        t.join();
                         break;
                     case 2:
                         ev = eventManager.genEvent("MAJ");
@@ -75,6 +75,8 @@ public class MenuPrincipal<D> implements Runnable {
                 }
             }
         } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

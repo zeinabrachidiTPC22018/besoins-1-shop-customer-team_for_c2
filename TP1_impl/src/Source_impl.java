@@ -12,8 +12,7 @@ import java.io.IOException;
 public class Source_impl<D> {
     public static void main(String[] args) throws IOException, InterruptedException {
         Source source = new Source<>();
-        source.addGEventListener((GEvent ev) -> System.out.println(ev.getData()));
-       
+        source.addGEventListener((GEvent ev) -> ev.getData());
         Thread t = new Thread(new MenuPrincipal(source));
         t.start();
         t.join();
