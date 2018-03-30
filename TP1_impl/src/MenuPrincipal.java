@@ -48,7 +48,11 @@ public class MenuPrincipal<D> implements Runnable {
     public void run() {
         GEvent ev=eventManager.genEvent("Aucune réponse connue");
         int choix;
+        Thread t;
         Menu_creer mc;
+        Menu_modifier mmod;
+        Menu_suprimer ms;
+        Menu_consulter mcons;
         try {
             while ((choix = menu()) != 0) {
                 switch (choix) {
@@ -56,18 +60,33 @@ public class MenuPrincipal<D> implements Runnable {
                         ev = eventManager.genEvent("Créer");
                         mc = new Menu_creer(eventManager);
                         eventManager.addGEventListener((gEvent) -> gEvent.getData());
-                        Thread t = new Thread(mc);
+                        t = new Thread(mc);
                         t.start();
                         t.join();
                         break;
                     case 2:
                         ev = eventManager.genEvent("MAJ");
+                        mmod = new Menu_modifier(eventManager);
+                        eventManager.addGEventListener((gEvent) -> gEvent.getData());
+                        t = new Thread(mmod);
+                        t.start();
+                        t.join();
                         break;
                     case 3:
                         ev = eventManager.genEvent("Suprimer");
+                        ms= new Menu_suprimer(eventManager);
+                        eventManager.addGEventListener((gEvent) -> gEvent.getData());
+                        t = new Thread(ms);
+                        t.start();
+                        t.join();
                         break;
                     case 4:
                         ev = eventManager.genEvent("Consulter");
+                        mcons= new Menu_consulter(eventManager);
+                        eventManager.addGEventListener((gEvent) -> gEvent.getData());
+                        t = new Thread(mcons);
+                        t.start();
+                        t.join();
                         break;
                 }
                 if (ev != null) {
