@@ -67,7 +67,13 @@ public class Menu_consulter<D> implements Runnable , GEventListener{
                         System.out.println("saisir id du client à afficher");
                         s = kb.nextLine();
                         c=chm.findClient(s);
-                        chm.displayClient(c);
+                        if ( c != null) {
+                            chm.displayClient(c);
+                        }
+                        else {
+                           System.out.println("Client not found");
+                           s = kb.nextLine();
+                        }
                         break;
                     case 2:
                         ev = eventManager.genEvent("consulter selon prénom");
@@ -75,7 +81,13 @@ public class Menu_consulter<D> implements Runnable , GEventListener{
                         System.out.println("saisir le prenom du(es) client(s) à afficher");
                         s = kb.nextLine();
                         result=chm.findClients(s);
-                        chm.displayClientsList(result);
+                        if (result != null) {
+                            chm.displayClientsList(result);
+                        }
+                        else {
+                           System.out.println("Client not found");
+                           s = kb.nextLine(); 
+                        }
                         break;
                     case 3:
                         ev = eventManager.genEvent("consulter selon nom");
@@ -83,7 +95,13 @@ public class Menu_consulter<D> implements Runnable , GEventListener{
                         System.out.println("saisir le nom du(es) client(s) à afficher");
                         s = kb.nextLine();
                         result=chm.findClientsNom(s);
-                        chm.displayClientsList(result);
+                        if (result != null) {
+                            chm.displayClientsList(result);
+                        }
+                        else {
+                           System.out.println("Client not found");
+                           s = kb.nextLine(); 
+                        }
                         break;
                     case 4 :
                         ev = eventManager.genEvent("Retourner au menu principal");

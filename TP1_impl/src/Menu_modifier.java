@@ -74,8 +74,14 @@ public class Menu_modifier<D> implements Runnable , GEventListener{
                         System.out.println("saisir id du client à modifier");
                         s = kb.nextLine();
                         c=chm.findClient(s);
-                        chm.displayClient(c);
-                        chm.updateClient(c);
+                        if (c != null) {
+                           chm.displayClient(c);
+                           chm.updateClient(c);
+                        }
+                        else {
+                            System.out.println("Client not found");
+                            s = kb.nextLine();
+                        }   
                         break;
                     case 2:
                         ev = eventManager.genEvent("Afficher clients");
