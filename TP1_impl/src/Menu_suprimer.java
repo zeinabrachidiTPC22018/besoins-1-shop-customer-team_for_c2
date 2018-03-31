@@ -25,8 +25,9 @@ public class Menu_suprimer<D> implements Runnable , GEventListener{
 
         int selection;
         //Ceci efface en principe un écran (console) Linux et Windows
-        //System.out.print("\033[H\033[2J");
-        //System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        for (int i = 0; i < 50; ++i) System.out.println();
         Scanner input = new Scanner(System.in);
 
         /**
@@ -45,7 +46,7 @@ public class Menu_suprimer<D> implements Runnable , GEventListener{
 
     @Override
     public void run() {
-        int choix;
+        int choix = 0;
         MenuPrincipal mp;
         Clients_hm chm;
         Client c;
@@ -66,7 +67,7 @@ public class Menu_suprimer<D> implements Runnable , GEventListener{
                         System.out.println("tu es sure que tu veux suprimer ce client? Y/N");
                         s = kb.nextLine();
                         if (s.equals("Y"))
-                            chm.removeClient(s);
+                            chm.removeClient(id);
                         break;
                     case 2:
                         ev = eventManager.genEvent("Afficher clients");
@@ -91,6 +92,8 @@ public class Menu_suprimer<D> implements Runnable , GEventListener{
         } catch (InterruptedException ex) {
             Logger.getLogger(Menu_creer.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (choix == 0)
+            System.exit(0);
     }
 
     @Override

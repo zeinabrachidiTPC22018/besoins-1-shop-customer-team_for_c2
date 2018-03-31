@@ -25,8 +25,9 @@ public class MenuPrincipal<D> implements Runnable {
 
         int selection;
         //Ceci efface en principe un écran (console) Linux et Windows
-        //System.out.print("\033[H\033[2J");
-        //System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        for (int i = 0; i < 50; ++i) System.out.println();
         Scanner input = new Scanner(System.in);
 
         /**
@@ -47,8 +48,8 @@ public class MenuPrincipal<D> implements Runnable {
     @Override
     public void run() {
         GEvent ev=eventManager.genEvent("Aucune réponse connue");
-        int choix;
-        Thread t;
+        int choix = 0;
+        Thread t = null;
         Menu_creer mc;
         Menu_modifier mmod;
         Menu_suprimer ms;
@@ -61,42 +62,36 @@ public class MenuPrincipal<D> implements Runnable {
                         mc = new Menu_creer(eventManager);
                         eventManager.addGEventListener((gEvent) -> gEvent.getData());
                         t = new Thread(mc);
-                        t.start();
-                        t.join();
                         break;
                     case 2:
                         ev = eventManager.genEvent("MAJ");
                         mmod = new Menu_modifier(eventManager);
                         eventManager.addGEventListener((gEvent) -> gEvent.getData());
                         t = new Thread(mmod);
-                        t.start();
-                        t.join();
                         break;
                     case 3:
                         ev = eventManager.genEvent("Suprimer");
                         ms= new Menu_suprimer(eventManager);
                         eventManager.addGEventListener((gEvent) -> gEvent.getData());
                         t = new Thread(ms);
-                        t.start();
-                        t.join();
                         break;
                     case 4:
                         ev = eventManager.genEvent("Consulter");
                         mcons= new Menu_consulter(eventManager);
                         eventManager.addGEventListener((gEvent) -> gEvent.getData());
                         t = new Thread(mcons);
-                        t.start();
-                        t.join();
                         break;
                 }
+                t.start();
+                t.join();
                 if (ev != null) {
                     eventManager.dispatch(ev);
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (choix == 0)
+            System.exit(0);
     }
 }

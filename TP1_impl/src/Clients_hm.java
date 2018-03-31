@@ -56,11 +56,15 @@ public class Clients_hm {
         clients_hm.values().forEach((cc) -> {
             System.out.println(cc.getId() + "\t" + cc.getPrenom() + "\t" + cc.getNom() + "\t" + cc.getTelephone() + "\t" + cc.getRue()+ "\t" + cc.getVille()  + "\t" + cc.getEtat()  + "\t" + cc.getCode()  + "\t" + cc.getPays() + "\t"  + cc.getMail());
         });
+        Scanner input = new Scanner(System.in);
+        String s = input.nextLine();
     }    
         
     public void displayClient(Client c){
         System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
         System.out.println(c.getId() + "\t" + c.getPrenom() + "\t" + c.getNom() + "\t" + c.getTelephone() + "\t" + c.getRue()+ "\t" + c.getVille()  + "\t" + c.getEtat()  + "\t" + c.getCode()  + "\t" + c.getPays() + "\t"  + c.getMail());
+        Scanner input = new Scanner(System.in);
+        String s = input.nextLine();
     }     
     
      public void displayClientsList(HashMap<String,Client> result){
@@ -68,6 +72,8 @@ public class Clients_hm {
         result.values().forEach((cc) -> {
             System.out.println(cc.getId() + "\t" + cc.getPrenom() + "\t" + cc.getNom() + "\t" + cc.getTelephone() + "\t" + cc.getRue()+ "\t" + cc.getVille()  + "\t" + cc.getEtat()  + "\t" + cc.getCode()  + "\t" + cc.getPays() + "\t"  + cc.getMail());
         });
+        Scanner input = new Scanner(System.in);
+        String s = input.nextLine();
     } 
     
     public  Client findClient (String id) {
