@@ -18,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 
 public class Clients_hm {
@@ -52,7 +51,6 @@ public class Clients_hm {
         json = gson.toJson(c);
         
         clientfilename = "Client" + "_" + ss[0] + ".json";
-        System.out.println("clientfilename=" + clientfilename);
         try {
           bwc = new  BufferedWriter ( new FileWriter(clientfilename));
           bwc.write(json);
@@ -66,59 +64,68 @@ public class Clients_hm {
         }
         catch(IOException e) {
         }
-        System.out.println(json);   
-        
     }
     
     public  Client findClient (String id) throws FileNotFoundException, IOException {
         String line;
-        BufferedReader brc, brn;
+        BufferedReader brc = null,  brn;
         brn = new BufferedReader(new FileReader("filenames"));
         while ((clientfilename = brn.readLine()) != null) {
-            System.out.println("clientfilename=" + clientfilename);
             brc = new BufferedReader(new FileReader(clientfilename));
             c = gson.fromJson(brc, Client.class);
-            if (c.getId().equals(id))
-               return c; 
+            System.out.println("client in find" + c);
+            if (c.getId().equals(id)) {
+                brn.close();
+                brc.close();
+                return c; 
+            }      
         }
+         brn.close();
+         brc.close();
         return (null);
     }    
     
-    /**
-     *
-     * @param prenom
-     * @return
-     * @throws java.io.FileNotFoundException
-     */
     public  HashMap <String,Client> findClients (String prenom) throws FileNotFoundException, IOException {
-        HashMap <String,Client> result=null;
+        HashMap <String,Client> result ;
+        result = new HashMap <>();
         String line;
-        BufferedReader brc, brn;
+        boolean trouve = false;
+        BufferedReader brc = null, brn;
         brn = new BufferedReader(new FileReader("filenames"));
-        System.out.println("++++++ in findClients");
         while ((clientfilename = brn.readLine()) != null) {
-            System.out.println("clientfilename=" + clientfilename);
             brc = new BufferedReader(new FileReader(clientfilename));
             c = gson.fromJson(brc, Client.class);
-            if (c.getPrenom().equals(prenom))
-                result.put(c.getId(), c);
-        }    
+            if (c.getPrenom().equals(prenom)) {
+                result.put(c.getId(), c); 
+                trouve=true;
+            }       
+        } 
+        if (!trouve) 
+            result = null;
+        brc.close();
+        brn.close();
         return result;
     }  
     
     public  HashMap <String,Client> findClientsNom (String nom) throws FileNotFoundException, IOException {
-       HashMap <String,Client> result=null;
+       HashMap <String,Client> result;
+       result = new HashMap <>();
+        boolean trouve = false;
         String line;
-        BufferedReader brc, brn;
+        BufferedReader brc = null, brn;
         brn = new BufferedReader(new FileReader("filenames"));
-        System.out.println("++++++ in findClients");
         while ((clientfilename = brn.readLine()) != null) {
-            System.out.println("clientfilename=" + clientfilename);
             brc = new BufferedReader(new FileReader(clientfilename));
             c = gson.fromJson(brc, Client.class);
-            if (c.getNom().equals(nom))
+            if (c.getNom().equals(nom)) {
                 result.put(c.getId(), c);
+                trouve=true;
+            }   
         }    
+        if (!trouve) 
+            result = null;
+        brc.close();
+        brn.close();
         return result;
     }  
     
@@ -133,15 +140,15 @@ public class Clients_hm {
         System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
         HashMap <String,Client> result=null;
         String line;
-        BufferedReader brc, brn;
+        BufferedReader brc = null, brn;
         brn = new BufferedReader(new FileReader("filenames"));
-        System.out.println("++++++ in findClients");
         while ((clientfilename = brn.readLine()) != null) {
-            System.out.println("clientfilename=" + clientfilename);
             brc = new BufferedReader(new FileReader(clientfilename));
             c = gson.fromJson(brc, Client.class); 
             System.out.println(c.getId() + "\t" + c.getPrenom() + "\t" + c.getNom() + "\t" + c.getTelephone() + "\t" + c.getRue()+ "\t" + c.getVille()  + "\t" + c.getEtat()  + "\t" + c.getCode()  + "\t" + c.getPays() + "\t"  + c.getMail());
-        }    
+        }
+        brc.close();
+        brn.close();
         Scanner input = new Scanner(System.in);
         String s = input.nextLine();
     }    
@@ -156,7 +163,7 @@ public class Clients_hm {
     } 
     
     public  void updateClient(Client c){  
-      BufferedWriter bwc, bwn;
+      BufferedWriter bwc;
       File f;
       Client c1;
       Scanner kb = new Scanner(System.in); 
@@ -194,12 +201,11 @@ public class Clients_hm {
             .setPays(newdata[0][8])             
             .setMail(newdata[0][9])
             .build();
-    json = gson.toJson(c);
+    json = gson.toJson(c1);
         
     clientfilename = "Client" + "_" + c.getId() + ".json";
     f = new File(clientfilename);
     f.delete();
-    System.out.println("clientfilename=" + clientfilename);
     try {
         bwc = new  BufferedWriter ( new FileWriter(clientfilename));
         bwc.write(json);
@@ -217,23 +223,31 @@ public class Clients_hm {
      * @throws java.io.FileNotFoundException
      */
     public  void removeClient (String id) throws FileNotFoundException, IOException {
-        String line, clientfilename = "Client" + "_" + id + ".json";
+        String line;
+        clientfilename = "Client" + "_" + id + ".json";
         File f = new File(clientfilename);
-        File f1 = new File("filenames");
-        File temp = new File("tempfilenames");
+        String path = f.getAbsolutePath();
         boolean delete = f.delete();
-        BufferedReader brn = new  BufferedReader ( new FileReader("filenames"));
-        BufferedWriter bwn= new  BufferedWriter ( new FileWriter("tempfilenames"));
-        while((line = brn.readLine()) != null) {
-            bwn.write(line);
-            bwn.flush();
-            if (line.equals(clientfilename)) {
-                continue;
+        if (delete)
+            System.out.println("client suprimé");
+        else
+           System.out.println("client non suprimé");
+        File oldf = new File("filenames");
+        File newf = new File("filenames");
+        File temp = new File("tempfilenames");
+        try (BufferedReader brn = new  BufferedReader ( new FileReader("filenames")); BufferedWriter bwn = new  BufferedWriter ( new FileWriter("tempfilenames"))) {
+            while((line = brn.readLine()) != null) {
+                if (line.equals(clientfilename)) {
+                    continue;
+                }
+                bwn.write(line);
+                bwn.newLine();
+                bwn.flush();
             }
-        f1.delete();
-        temp.renameTo(f1);
+            bwn.close();
+            brn.close();
+            oldf.delete();
+            temp.renameTo(newf);
         }
-        bwn.close();
-        brn.close();
     }
 }

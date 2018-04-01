@@ -36,8 +36,8 @@ public class Menu_modifier<D> implements Runnable , GEventListener{
 
         int selection;
         //Ceci efface en principe un écran (console) Linux et Windows
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        //System.out.print("\033[H\033[2J");
+        //System.out.flush();
        // for (int i = 0; i < 50; ++i) System.out.println();
         Scanner input = new Scanner(System.in);
 
