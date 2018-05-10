@@ -25,9 +25,9 @@ public class MenuPrincipal<D> implements Runnable {
 
         int selection;
         //Ceci efface en principe un écran (console) Linux et Windows
-        //System.out.print("\033[H\033[2J");
-        //System.out.flush();
-        //for (int i = 0; i < 50; ++i) System.out.println();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        for (int i = 0; i < 50; ++i) System.out.println();
         Scanner input = new Scanner(System.in);
 
         /**

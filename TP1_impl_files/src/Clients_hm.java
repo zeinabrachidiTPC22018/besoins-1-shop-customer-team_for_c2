@@ -24,35 +24,59 @@ public class Clients_hm {
     
     Client c;
     Gson gson = new Gson();
-    String json, clientfilename;
+    String json, clientfilename, Line, identifier, directory, path_clientfilename, path_filenames;
     
-    public void createClient(){
+    public void createClient() throws IOException{
         BufferedWriter bwc, bwn;
+        BufferedReader brid;
+        BufferedWriter bwid;
+        
+        
         Scanner kb = new Scanner(System.in);       
         System.out.println("saisir un client");
-        System.out.println("Usage : Id - prénom - nom - tel - rue - ville - etat - code - pays - mail");
-        System.out.println("Exemple : bob001 - Bob - Ducnam - 03240246 - eddeh - haret hreik - baabda - +0961 - Liban - Bob.Ducnam@isae.edu.lb"); 
+        System.out.println("Usage : prénom - nom - pays - etat - ville - rue - code - tel - mail");
+        System.out.println("Exemple :  Bob - Ducnam - Liban - baabda - haret hreik - eddeh - +0961 - 03240246 - Bob.Ducnam@isae.edu.lb"); 
         String s = kb.nextLine();
         String[] ss = s.split(" - ");
-        String[] ssn = new String[10];
+        String[] ssn = new String[9];
         System.arraycopy( ss, 0, ssn, 0, ss.length );
         if (ss.length < ssn.length)
            for (int i=ss.length; i<ssn.length;i++)
                ssn[i]="";
-        c = new Client.ClientBuilder(ss[0], ss[1],ss[2] )
-                .setTelephone(ssn[3])
-                .setRue(ssn[4])
-                .setVille(ssn[5])
-                .setEtat(ssn[6])
-                .setCode(ssn[7])
-                .setPays(ssn[8])
-                .setMail(ssn[9])
+        
+        File sequence = new File("idFile");
+        Line=null;
+        if (!sequence.exists())
+             identifier = ss[2].substring(0, 3) + ss[3].substring(0, 3) + ss[4].substring(0, 3) + ss[5].substring(0, 3) + "1" ;
+        else {
+            Line = String.valueOf(Integer.parseInt(Line) + 1);
+            bwid = new BufferedWriter(new FileWriter("idFile"));
+            bwid.write(Line);
+            bwid.flush(); 
+            bwid.close();
+            identifier = ss[2].substring(0, 3) + ss[3].substring(0, 3) + ss[4].substring(0, 3) + ss[5].substring(0, 3) + Line;
+        }    
+                   
+        c = new Client.ClientBuilder(identifier, ss[0], ss[1], ss[2], ss[3], ss[4], ss[5])
+                .setCode(ssn[6])
+                .setTelephone(ssn[7])
+                .setMail(ssn[8])
                 .build();
         json = gson.toJson(c);
         
-        clientfilename = "Client" + "_" + ss[0] + ".json";
+        clientfilename = identifier + ".json";
+        path_clientfilename = "C:\\" + identifier.substring(0,3) + "\\" + identifier.substring(4, 7) + "\\" + identifier.substring(8,11) + "\\" + identifier.substring(12,15) + "\\" + clientfilename;
+        path_filenames = "C:\\" + identifier.substring(0,3) + "\\" + identifier.substring(4, 7) + "\\" + identifier.substring(8,11) + "\\" + identifier.substring(12,15) + "\\" + "filenames";
+        int from=0, to=3;
         try {
-          bwc = new  BufferedWriter ( new FileWriter(clientfilename));
+             for ( int i=0; i<4; i++) {
+                directory = identifier.substring(from, to);
+                createDirectory(directory);
+                from = to + 1;
+                to = from + 3;
+            }
+          
+          bwc = new  BufferedWriter ( new FileWriter(path_clientfilename));
           bwc.write(json);
           bwn = new  BufferedWriter ( new FileWriter("filenames", true));
           bwn.write(clientfilename);
@@ -66,23 +90,30 @@ public class Clients_hm {
         }
     }
     
-    public  Client findClient (String id) throws FileNotFoundException, IOException {
+    public void createDirectory(String directory) {
+       File dir = new File(directory);
+       if (!dir.exists()) {
+           dir.mkdir();
+       }
+       
+    }
+    
+    public  Client findClient (String identifier) throws FileNotFoundException, IOException {
         String line;
-        BufferedReader brc = null,  brn;
-        brn = new BufferedReader(new FileReader("filenames"));
-        while ((clientfilename = brn.readLine()) != null) {
-            brc = new BufferedReader(new FileReader(clientfilename));
-            c = gson.fromJson(brc, Client.class);
-            System.out.println("client in find" + c);
-            if (c.getId().equals(id)) {
-                brn.close();
-                brc.close();
-                return c; 
-            }      
+        BufferedReader brc;
+        clientfilename = identifier + ".json";
+        path_clientfilename = "C:\\" + identifier.substring(0,3) + "\\" + identifier.substring(4, 7) + "\\" + identifier.substring(8,11) + "\\" + identifier.substring(12,15) + "\\" + clientfilename;
+        brc = new BufferedReader(new FileReader(path_clientfilename));
+        File f = new File(path_clientfilename);
+        if (f.exists()) {
+           c = gson.fromJson(brc, Client.class);
+           System.out.println("client in find" + c);
+           return c; 
         }
-         brn.close();
-         brc.close();
-        return (null);
+        else 
+            c = null;
+        brc.close();
+        return c;
     }    
     
     public  HashMap <String,Client> findClients (String prenom) throws FileNotFoundException, IOException {
@@ -173,14 +204,14 @@ public class Clients_hm {
       newdata[0][0]=c.getId();
       newdata[0][1]=c.getPrenom();
       newdata[0][2]=c.getNom();
-      newdata[0][3]=c.getTelephone();
-      newdata[0][4]=c.getRue();
+      newdata[0][3]=c.getPays();
+      newdata[0][4]=c.getEtat();
       newdata[0][5]=c.getVille();
-      newdata[0][6]=c.getEtat();
+      newdata[0][6]=c.getRue();
       newdata[0][7]=c.getCode();
-      newdata[0][8]=c.getPays();
+      newdata[0][8]=c.getTelephone();
       newdata[0][9]=c.getMail();
-      System.out.println("Usage : tel: 3 - rue: 4 - ville: 5 - etat: 6 - code: 7 - pays: 8 - mail: 9 et -1 pour arrêter"); 
+      System.out.println("Usage :  code: 6 - tel: 7 - mail: 9 et -1 pour arrêter"); 
       while (true) {
         System.out.println("saisir le numéro de la colonne à modifier:");  
         n = kb.nextInt();
@@ -192,17 +223,12 @@ public class Clients_hm {
         newdata[0][n]= data;
     }
   
-    c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][1],newdata[0][2] )
-            .setTelephone(newdata[0][3])  
-            .setRue(newdata[0][4])
-            .setVille(newdata[0][5])
-            .setEtat(newdata[0][6])
-            .setCode(newdata[0][7])    
-            .setPays(newdata[0][8])             
-            .setMail(newdata[0][9])
+    c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][1],newdata[0][2] , newdata[0][3], newdata[0][4], newdata[0][5], newdata[0][6])
+             .setCode(newdata[0][7])    
+            .setTelephone(newdata[0][8])  
+            .setMail(newdata[0][0])
             .build();
     json = gson.toJson(c1);
-        
     clientfilename = "Client" + "_" + c.getId() + ".json";
     f = new File(clientfilename);
     f.delete();

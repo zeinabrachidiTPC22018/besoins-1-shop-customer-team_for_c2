@@ -16,12 +16,12 @@ public class Client {
     private final String _id;
     private final String _prenom;
     private final String _nom;
+    private final String _pays;
+    private final String _etat;
+    private final String _ville;
+    private final String _rue;
+    private final String _code;
     private String _telephone;
-    private String _rue;
-    private String _ville;
-    private String _etat;
-    private String _code;
-    private String _pays;
     private String _mail;
 
     public Client(ClientBuilder cb) {
@@ -86,49 +86,34 @@ public class Client {
     public static class ClientBuilder {
 
         private final String _id;
-        private String _prenom;
-        private String _nom;
-        private String _telephone;
-        private String _rue;
-        private String _ville;
-        private String _etat;
+        private final String _prenom;
+        private final String _nom;
+        private final String _pays;
+        private final String _etat;
+        private final String _ville;
+        private final String _rue;
         private String _code;
-        private String _pays;
+        private String _telephone;
         private String _mail;
 
-        public ClientBuilder(String id, String prenom, String nom) {
+        public ClientBuilder(String id, String prenom, String nom, String pays, String etat, String ville, String rue) {
             _id = id;
             _prenom = prenom;
             _nom = nom;
-        }
-
-        public ClientBuilder setTelephone(String _telephone) {
-            this._telephone = _telephone;
-            return this;
-        }
-
-        public ClientBuilder setRue(String _rue) {
-            this._rue = _rue;
-            return this;
-        }
-
-        public ClientBuilder setVille(String _ville) {
-            this._ville = _ville;
-            return this;
-        }
-
-        public ClientBuilder setEtat(String _etat) {
-            this._etat = _etat;
-            return this;
+            _pays = pays;
+           _etat = etat;
+           _ville = ville;
+           _rue = rue;
+       
         }
 
         public ClientBuilder setCode(String _code) {
             this._code = _code;
             return this;
         }
-
-        public ClientBuilder setPays(String _pays) {
-            this._pays = _pays;
+        
+        public ClientBuilder setTelephone(String _telephone) {
+            this._telephone = _telephone;
             return this;
         }
 
@@ -142,4 +127,3 @@ public class Client {
         }
     }
 }
-
