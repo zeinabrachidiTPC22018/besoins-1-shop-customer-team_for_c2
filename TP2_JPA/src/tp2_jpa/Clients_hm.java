@@ -12,17 +12,25 @@ package tp2_jpa;
  * @author zeina
  */
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 
 public class Clients_hm {
+    EntityManager em;
+    EntityManagerFactory emf;
+    Client c;
+    List <Client> list;
+    
     static HashMap<String,Client> clients_hm;
     
     static  {
         clients_hm = new HashMap<>();
     }
-    Client c;
      
     public void createClient(){
         Scanner kb = new Scanner(System.in);       
@@ -47,18 +55,32 @@ public class Clients_hm {
                 .setTelephone(ssn[8])
                 .setMail(ssn[9])
                 .build();
-        clients_hm.put(c.getId(), c);  
-        
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(c);
+        em.getTransaction().commit();    
     }
     
     /**
      *
      */
-    public void displayClients(){
+    public void displayClients(){  
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        
+        
+        list = em.createNamedQuery("Client.findAll", Client.class).getResultList();
+
+        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });          
+        
         System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
+        
         clients_hm.values().forEach((cc) -> {
             System.out.println(cc.getId() + "\t" + cc.getPrenom() + "\t" + cc.getNom() + "\t" + cc.getTelephone() + "\t" + cc.getRue()+ "\t" + cc.getVille()  + "\t" + cc.getEtat()  + "\t" + cc.getCode()  + "\t" + cc.getPays() + "\t"  + cc.getMail());
         });
+    
         Scanner input = new Scanner(System.in);
         String s = input.nextLine();
     }    
@@ -79,31 +101,42 @@ public class Clients_hm {
         String s = input.nextLine();
     } 
     
-    public  Client findClient (String id) {
-        return clients_hm.get(id);
+    public  Client findClient (String _id) {
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findById", Client.class).getResultList();
+
+        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });          
+       
+        return clients_hm.get(_id);
     }
     
     /**
      *
-     * @param prenom
+     * @param _prenom
      * @return
      */
-    public  HashMap <String,Client> findClients (String prenom) {
-       HashMap <String,Client> result;
-        result = (HashMap <String,Client>) clients_hm.entrySet()
-                .stream()
-                .filter(map -> prenom.equals(map.getValue().getPrenom()))
-      .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
-        return result;
+    public  HashMap <String,Client> findClients (String _prenom) {
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByPrenom", Client.class).getResultList();
+
+        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });    
+        
+        return clients_hm;
     }  
     
-    public  HashMap <String,Client> findClientsNom (String nom) {
-       HashMap <String,Client> result;
-        result = (HashMap <String,Client>) clients_hm.entrySet()
-                .stream()
-                .filter(map -> nom.equals(map.getValue().getNom()))
-      .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
-        return result;
+    public  HashMap <String,Client> findClientsNom (String _nom) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByNom", Client.class).getResultList();
+
+        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });    
+        
+        return clients_hm;
     }  
     
     public  void updateClient(Client c){  

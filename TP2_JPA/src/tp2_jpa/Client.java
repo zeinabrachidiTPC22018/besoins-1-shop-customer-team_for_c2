@@ -44,7 +44,7 @@ public class Client implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "_id")
-    private final String _id;
+    private String _id;
     @Basic(optional = false)
     @Column(name = "_prenom")
     private String _prenom;
@@ -53,10 +53,10 @@ public class Client implements Serializable {
     private String _nom;
     @Basic(optional = false)
     @Column(name = "_pays")
-    private final String _pays;
+    private String _pays;
     @Basic(optional = false)
     @Column(name = "_etat")
-    private final String _etat;
+    private String _etat;
     @Basic(optional = false)
     @Column(name = "_ville")
     private String _ville;
@@ -69,12 +69,8 @@ public class Client implements Serializable {
     @Column(name = "mail")
     private String _mail;
 
-    //public Client() {
-    //}
-    
-    //public Client(String id) {
-    //    this._id = id;
-    //}
+    public Client() {
+    }
 
     //public Client(String id, String prenom, String nom, String pays, String etat, String ville) {
     //    this._id = id;
@@ -258,10 +254,7 @@ public class Client implements Serializable {
             return false;
         }
         Client other = (Client) object;
-        if ((this._id == null && other._id != null) || (this._id != null && !this._id.equals(other._id))) {
-            return false;
-        }
-        return true;
+        return !((this._id == null && other._id != null) || (this._id != null && !this._id.equals(other._id)));
     }
 
     //@Override
@@ -270,4 +263,3 @@ public class Client implements Serializable {
    // }
     
 }
-

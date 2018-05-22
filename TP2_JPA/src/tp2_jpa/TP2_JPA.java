@@ -5,25 +5,23 @@
  */
 package tp2_jpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 /**
  *
  * @author zeina
+ * @param <D>
  */
-public class TP2_JPA {
+public class TP2_JPA<D> {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) {
-        EntityManager em;
-        EntityManagerFactory emf;
-        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
+    public static void main(String[] args) throws InterruptedException {
+        Source source = new Source<>();
+        source.addGEventListener((GEvent ev) -> ev.getData());
+        Thread t = new Thread(new MenuPrincipal(source));
+        t.start();
+        t.join();
         
     }
     
