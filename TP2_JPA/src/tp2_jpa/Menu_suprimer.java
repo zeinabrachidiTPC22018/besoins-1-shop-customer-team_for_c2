@@ -68,7 +68,7 @@ public class Menu_suprimer<D> implements Runnable , GEventListener{
                           System.out.println("tu es sure que tu veux suprimer ce client? Y/N");
                           s = kb.nextLine();
                            if (s.equals("Y"))
-                              chm.removeClient(id);   
+                              chm.removeClient(c);   
                         }
                         else {
                             System.out.println("Client not found");

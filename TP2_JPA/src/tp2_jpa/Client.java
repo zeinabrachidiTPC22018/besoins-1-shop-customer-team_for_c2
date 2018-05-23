@@ -46,16 +46,16 @@ public class Client implements Serializable {
     @Column(name = "_id")
     private String _id;
     @Basic(optional = false)
-    @Column(name = "_prenom")
+    @Column(name = "_prenom", nullable=false)
     private String _prenom;
     @Basic(optional = false)
-    @Column(name = "_nom")
+    @Column(name = "_nom" , nullable=false)
     private String _nom;
     @Basic(optional = false)
-    @Column(name = "_pays")
+    @Column(name = "_pays" , nullable=false)
     private String _pays;
     @Basic(optional = false)
-    @Column(name = "_etat")
+    @Column(name = "_etat" , nullable=false)
     private String _etat;
     @Basic(optional = false)
     @Column(name = "_ville")

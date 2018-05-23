@@ -14,7 +14,6 @@ package tp2_jpa;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -165,25 +164,34 @@ public class Clients_hm {
         kb.nextLine();
         data = kb.nextLine();
         newdata[0][n]= data;
-    }
+      }
   
-    c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][3].substring(0,3).toUpperCase(),newdata[0][4].substring(0,3).toUpperCase() )
-            .setPrenom(newdata[0][1])
-            .setNom(newdata[0][2])
-            .setVille(newdata[0][5])
-            .setRue(newdata[0][6])
-            .setCode(newdata[0][7])  
-            .setTelephone(newdata[0][8])  
-            .setMail(newdata[0][9])
-            .build();
-      clients_hm.replace(c.getId(), c, c1);    
+      c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][3].substring(0,3).toUpperCase(),newdata[0][4].substring(0,3).toUpperCase() )
+              .setPrenom(newdata[0][1])
+              .setNom(newdata[0][2])
+              .setVille(newdata[0][5])
+              .setRue(newdata[0][6])
+              .setCode(newdata[0][7])  
+              .setTelephone(newdata[0][8])  
+              .setMail(newdata[0][9])
+              .build();
+    
+      emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+      em = emf.createEntityManager();
+      em.getTransaction().begin();
+      em.merge(c);
+      em.getTransaction().commit();     
     }
     
     /**
      *
-     * @param id
+     * @param c
      */
-    public  void removeClient (String id) {
-        clients_hm.remove(id);
+    public  void removeClient (Client c) {
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.remove(c);
+        em.getTransaction().begin();
+        
     }
 }
