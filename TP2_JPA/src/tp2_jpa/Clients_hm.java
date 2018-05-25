@@ -23,40 +23,55 @@ public class Clients_hm {
     EntityManager em;
     EntityManagerFactory emf;
     Client c;
+    
     List <Client> list;
     
     static HashMap<String,Client> clients_hm;
     
     static  {
         clients_hm = new HashMap<>();
-    }
-     
+    }   
+
     public void createClient(){
+        String id;
         Scanner kb = new Scanner(System.in);       
         System.out.println("saisir un client");
-        System.out.println("Usage : Id - prénom - nom - pays - etat - ville -  rue - code - tel  - mail");
-        System.out.println("Exemple : bob001 - Bob - Ducnam - Liban - baabda - haret hreik - eddeh - +0961  - 03240246 - Bob.Ducnam@isae.edu.lb"); 
-        String s = kb.nextLine();
+        System.out.println("Usage : prénom - nom - pays - etat - ville -  rue - code - tel  - mail");
+        System.out.println("Exemple : Bob - Ducnam - Liban - baabda - haret hreik - eddeh - +0961  - 03240246 - Bob.Ducnam@isae.edu.lb"); 
+               
+        String s;
+        s = kb.nextLine();
         String[] ss = s.split(" - ");
-        String[] ssn = new String[10];
+        String[] ssn = new String[9];
         
         System.arraycopy( ss, 0, ssn, 0, ss.length );
         if (ss.length < ssn.length)
            for (int i=ss.length; i<ssn.length;i++)
                ssn[i]="";
+        for (String ssn1 : ssn) {
+            System.out.print(ssn1 + "  ");
+        }
+
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+       em = emf.createEntityManager();
+       em.getTransaction().begin();
         
-        c = new Client.ClientBuilder(ss[0], ss[3].substring(0,3).toUpperCase(), ss[4].substring(0,3).toUpperCase())
-                .setPrenom(ssn[1])
-                .setNom(ssn[2])
-                .setVille(ssn[5])
-                .setRue(ssn[6])
-                .setCode(ssn[7])
-                .setTelephone(ssn[8])
-                .setMail(ssn[9])
+        long nbc;
+        nbc = ((Number)em.createNamedQuery("Client.findAllCount").getSingleResult()).intValue();
+        if (nbc == 0)
+            id = ss[2].substring(0,3).toUpperCase() +  ss[3].substring(0,3).toUpperCase() + "1";
+        else
+            id = ss[2].substring(0,3).toUpperCase() +  ss[3].substring(0,3).toUpperCase() + Long.toString(nbc+1);
+        
+        c = new Client.ClientBuilder(id, ss[2], ss[3])
+                .setPrenom(ssn[0])
+                .setNom(ssn[1])
+                .setVille(ssn[4])
+                .setRue(ssn[5])
+                .setCode(ssn[6])
+                .setTelephone(ssn[7])
+                .setMail(ssn[8])
                 .build();
-        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
         em.persist(c);
         em.getTransaction().commit();    
     }
@@ -68,22 +83,136 @@ public class Clients_hm {
         emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
         em = emf.createEntityManager();
         em.getTransaction().begin();
-        
-        
-        list = em.createNamedQuery("Client.findAll", Client.class).getResultList();
 
-        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });          
+        list = em.createNamedQuery("Client.findAll", Client.class).getResultList();
         
-        System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
-        
-        clients_hm.values().forEach((cc) -> {
-            System.out.println(cc.getId() + "\t" + cc.getPrenom() + "\t" + cc.getNom() + "\t" + cc.getTelephone() + "\t" + cc.getRue()+ "\t" + cc.getVille()  + "\t" + cc.getEtat()  + "\t" + cc.getCode()  + "\t" + cc.getPays() + "\t"  + cc.getMail());
-        });
-    
+        System.out.println("Id\t" + "prénom\t" + "nom\t" + "pays\t" + "etat\t" + "ville\t" + "rue\t" +   "code\t" + "tel\t" +  "mail\t");
+        for (Client  c : list) {
+             System.out.println( c.getId() + "\t" + c.getPrenom() + "\t" + c.getNom() + "\t" +  c.getPays() + "\t" +  c.getEtat() + "\t"  + c.getVille()  + "\t" + c.getRue() + "\t" + c.getCode() + "\t" + c.getTelephone() + "\t" + c.getMail());
+        }
         Scanner input = new Scanner(System.in);
         String s = input.nextLine();
     }    
-        
+    
+    public  Client findClient (String _id) {
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        list = em.createNamedQuery("Client.findById", Client.class).setParameter("_id", _id).getResultList(); 
+        for (Client  c : list) {
+            
+            if (!list.isEmpty() ){
+                return c;  
+            }
+        }
+        return null;
+    }
+    
+     /**
+     *
+     * @param _prenom
+     * @return
+     */
+    public  List<Client> findClients (String _prenom) {
+        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByPrenom", Client.class).setParameter("_prenom", _prenom).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsNom (String _nom) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByNom", Client.class).setParameter("_nom", _nom).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsPays (String _pays) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByPays", Client.class).setParameter("_pays", _pays).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsEtat (String _etat) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByEtat", Client.class).setParameter("_etat", _etat).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsVille (String _ville) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByVille", Client.class).setParameter("_ville", _ville).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsRue (String _rue) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByRue", Client.class).setParameter("_rue", _rue).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsCode (String _code) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByCode", Client.class).setParameter("_code", _code).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsTelephone (String _telephone) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByTelephone", Client.class).setParameter("_telephone", _telephone).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }  
+    
+    public  List<Client> findClientsMail (String _mail) {
+       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        list = em.createNamedQuery("Client.findByMail", Client.class).setParameter("_mail", _mail).getResultList();
+        if (!list.isEmpty() ){
+           return list;
+        }   
+        return null;
+    }     
+    
     public void displayClient(Client c){
         System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
         System.out.println(c.getId() + "\t" + c.getPrenom() + "\t" + c.getNom() + "\t" + c.getTelephone() + "\t" + c.getRue()+ "\t" + c.getVille()  + "\t" + c.getEtat()  + "\t" + c.getCode()  + "\t" + c.getPays() + "\t"  + c.getMail());
@@ -91,53 +220,15 @@ public class Clients_hm {
         String s = input.nextLine();
     }     
     
-     public void displayClientsList(HashMap<String,Client> result){
+     public void displayClientsList(List<Client> result){
         System.out.println("Id\t" + "prénom\t" + "nom\t" +  "tel\t" + "rue\t" + "ville\t" + "etat\t" + "code\t" + "pays\t" + "mail\t");
-        result.values().forEach((cc) -> {
-            System.out.println(cc.getId() + "\t" + cc.getPrenom() + "\t" + cc.getNom() + "\t" + cc.getTelephone() + "\t" + cc.getRue()+ "\t" + cc.getVille()  + "\t" + cc.getEtat()  + "\t" + cc.getCode()  + "\t" + cc.getPays() + "\t"  + cc.getMail());
-        });
+        for (Client  c : result) {
+             System.out.println( c.getId() + "\t" + c.getPrenom() + "\t" + c.getNom() + "\t" +  c.getPays() + "\t" +  c.getEtat() + "\t"  + c.getVille()  + "\t" + c.getRue() + "\t" + c.getCode() + "\t" + c.getTelephone() + "\t" + c.getMail());
+        }
         Scanner input = new Scanner(System.in);
         String s = input.nextLine();
     } 
-    
-    public  Client findClient (String _id) {
-        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
-        list = em.createNamedQuery("Client.findById", Client.class).getResultList();
 
-        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });          
-       
-        return clients_hm.get(_id);
-    }
-    
-    /**
-     *
-     * @param _prenom
-     * @return
-     */
-    public  HashMap <String,Client> findClients (String _prenom) {
-        emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
-        list = em.createNamedQuery("Client.findByPrenom", Client.class).getResultList();
-
-        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });    
-        
-        return clients_hm;
-    }  
-    
-    public  HashMap <String,Client> findClientsNom (String _nom) {
-       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
-        list = em.createNamedQuery("Client.findByNom", Client.class).getResultList();
-
-        list.forEach((cc) -> {    clients_hm.put(c.getId(), c);        });    
-        
-        return clients_hm;
-    }  
-    
     public  void updateClient(Client c){  
       Client c1;
         Scanner kb = new Scanner(System.in); 
@@ -154,19 +245,24 @@ public class Clients_hm {
       newdata[0][7]=c.getCode();
       newdata[0][8]=c.getTelephone();
       newdata[0][9]=c.getMail();
-      System.out.println("Usage : prenom: 1 - nom: 2 -  ville: 5 - rue: 6 - code: 7 - tel: 8 - mail: 9 et -1 pour arrêter"); 
+      
       while (true) {
-        System.out.println("saisir le numéro de la colonne à modifier:");  
+          System.out.println("Usage : prenom: 1 - nom: 2 -  ville: 5 - rue: 6 - code: 7 - tel: 8 - mail: 9 et -1 pour arrêter"); 
+          System.out.println("saisir le numéro de la colonne à modifier:");  
         n = kb.nextInt();
         if (n==-1)
             break;
-        System.out.println("saisir la nouvelle donnée:");
-        kb.nextLine();
-        data = kb.nextLine();
-        newdata[0][n]= data;
+        if (n==3 || n==4)
+            System.out.println("tu ne peux pas modifier le pays et l;etat");
+        else {
+           System.out.println("saisir la nouvelle donnée:");
+           kb.nextLine();
+           data = kb.nextLine();
+           newdata[0][n]= data;
+        }
       }
   
-      c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][3].substring(0,3).toUpperCase(),newdata[0][4].substring(0,3).toUpperCase() )
+      c1 = new Client.ClientBuilder(newdata[0][0], newdata[0][3],newdata[0][4] )
               .setPrenom(newdata[0][1])
               .setNom(newdata[0][2])
               .setVille(newdata[0][5])
@@ -179,7 +275,7 @@ public class Clients_hm {
       emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
       em = emf.createEntityManager();
       em.getTransaction().begin();
-      em.merge(c);
+      em.merge(c1);
       em.getTransaction().commit();     
     }
     
@@ -190,8 +286,10 @@ public class Clients_hm {
     public  void removeClient (Client c) {
         emf = Persistence.createEntityManagerFactory("TP2_JPAPU");
         em = emf.createEntityManager();
-        em.remove(c);
         em.getTransaction().begin();
+        int deleteCount= em.createNamedQuery("Client.deleteById", Client.class).setParameter("_id", c.getId()).executeUpdate();
+        //em.remove(c);
+        em.getTransaction().commit();    
         
     }
 }

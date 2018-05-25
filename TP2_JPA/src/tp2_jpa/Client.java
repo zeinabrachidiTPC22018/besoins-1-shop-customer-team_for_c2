@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c")
+    , @NamedQuery(name = "Client.findAllCount", query = "SELECT COUNT(c) FROM Client c")
     , @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c._id = :_id")
     , @NamedQuery(name = "Client.findByPrenom", query = "SELECT c FROM Client c WHERE c._prenom = :_prenom")
     , @NamedQuery(name = "Client.findByNom", query = "SELECT c FROM Client c WHERE c._nom = :_nom")
@@ -36,7 +37,9 @@ import com.google.gson.GsonBuilder;
     , @NamedQuery(name = "Client.findByRue", query = "SELECT c FROM Client c WHERE c._rue = :_rue")
     , @NamedQuery(name = "Client.findByCode", query = "SELECT c FROM Client c WHERE c._code = :_code")
     , @NamedQuery(name = "Client.findByTelephone", query = "SELECT c FROM Client c WHERE c._telephone = :_telephone")
-    , @NamedQuery(name = "Client.findByMail", query = "SELECT c FROM Client c WHERE c._mail = :_mail")})
+    , @NamedQuery(name = "Client.findByMail", query = "SELECT c FROM Client c WHERE c._mail = :_mail")
+    , @NamedQuery(name = "Client.deleteById", query = "DELETE FROM Client c WHERE c._id = :_id")})
+
 
 public class Client implements Serializable {
 
@@ -68,7 +71,7 @@ public class Client implements Serializable {
     private String _telephone;
     @Column(name = "mail")
     private String _mail;
-
+    
     public Client() {
     }
 
@@ -137,6 +140,7 @@ public class Client implements Serializable {
     public String getId() {
         return _id;
     }
+
     public String getPrenom() {
        return _prenom;
     }
@@ -165,12 +169,12 @@ public class Client implements Serializable {
         return _mail;
     }
     
-    @Override
-    public String toString() {
+   // @Override
+    //public String toString() {
         //Gson gson = new Gson();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this);
-    }
+    //    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    //    return gson.toJson(this);
+    //}
     
     public static class ClientBuilder {
 
@@ -257,9 +261,9 @@ public class Client implements Serializable {
         return !((this._id == null && other._id != null) || (this._id != null && !this._id.equals(other._id)));
     }
 
-    //@Override
-   // public String toString() {
-    //    return "tp2_jpa.Client[ _id=" + _id + " ]";
-   // }
+    @Override
+    public String toString() {
+        return "tp2_jpa.Client[ _id=" + _id + " ]";
+    }
     
 }
