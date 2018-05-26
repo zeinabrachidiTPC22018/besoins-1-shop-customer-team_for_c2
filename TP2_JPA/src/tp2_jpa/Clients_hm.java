@@ -11,6 +11,7 @@ package tp2_jpa;
  *
  * @author zeina
  */
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -60,9 +61,16 @@ public class Clients_hm {
         nbc = ((Number)em.createNamedQuery("Client.findAllCount").getSingleResult()).intValue();
         if (nbc == 0)
             id = ss[2].substring(0,3).toUpperCase() +  ss[3].substring(0,3).toUpperCase() + "1";
-        else
-            id = ss[2].substring(0,3).toUpperCase() +  ss[3].substring(0,3).toUpperCase() + Long.toString(nbc+1);
-        
+        else {
+            List<String> list_id;
+            list_id = em.createNamedQuery("Client.extractId").getResultList();
+            System.out.println( list_id );
+           
+            long max_id;
+            max_id = Long.parseLong(Collections.max(list_id));
+            id = ss[2].substring(0,3).toUpperCase() +  ss[3].substring(0,3).toUpperCase() + Long.toString(max_id + 1);
+        }
+            
         c = new Client.ClientBuilder(id, ss[2], ss[3])
                 .setPrenom(ssn[0])
                 .setNom(ssn[1])

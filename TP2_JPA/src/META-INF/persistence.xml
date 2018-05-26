@@ -3,8 +3,6 @@
   <persistence-unit name="TP2_JPAPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>tp2_jpa.Client</class>
-    <class>tp2_jpa.Parameters</class>
-    <class>tp2_jpa.Parametres</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/one_dollar_shop?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

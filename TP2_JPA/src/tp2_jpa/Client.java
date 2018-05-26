@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 @NamedQueries({
     @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c")
     , @NamedQuery(name = "Client.findAllCount", query = "SELECT COUNT(c) FROM Client c")
+    , @NamedQuery(name = "Client.extractId", query = "SELECT SUBSTRING(c._id, 7, LENGTH(c._id)) FROM Client c")
     , @NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c._id = :_id")
     , @NamedQuery(name = "Client.findByPrenom", query = "SELECT c FROM Client c WHERE c._prenom = :_prenom")
     , @NamedQuery(name = "Client.findByNom", query = "SELECT c FROM Client c WHERE c._nom = :_nom")
@@ -75,55 +76,6 @@ public class Client implements Serializable {
     public Client() {
     }
 
-    //public Client(String id, String prenom, String nom, String pays, String etat, String ville) {
-    //    this._id = id;
-    //    this._prenom = prenom;
-    //    this._nom = nom;
-    //    this._pays = pays;
-    //    this._etat = etat;
-    //    this._ville = ville;
-    //}
-
-    //public void setId(String id) {
-    //    this._id = id;
-   // }
-
-    //public void setPrenom(String prenom) {
-    //    this.prenom = prenom;
-    //}
-
-    //public void setNom(String nom) {
-    //    this.nom = nom;
-    //}
-
-    //public void setPays(String pays) {
-    //    this.pays = pays;
-    //}
-
-    //public void setEtat(String etat) {
-    //    this.etat = etat;
-    //}
-
-   // public void setVille(String ville) {
-    //    this.ville = ville;
-    //}
-
-    //public void setRue(String rue) {
-    //    this.rue = rue;
-    //}
-
-    //public void setCode(String code) {
-    //    this.code = code;
-    //}
-
-    //public void setTelephone(String telephone) {
-    //    this.telephone = telephone;
-    //}
-
-    //public void setMail(String mail) {
-    //    this.mail = mail;
-    //}
-    
     public Client(ClientBuilder cb) {
         _id = cb._id;
         _prenom = cb._prenom;
@@ -169,12 +121,12 @@ public class Client implements Serializable {
         return _mail;
     }
     
-   // @Override
-    //public String toString() {
-        //Gson gson = new Gson();
-    //    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    //    return gson.toJson(this);
-    //}
+   @Override
+   public String toString() {
+        Gson gson = new Gson();
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(this);
+    }
     
     public static class ClientBuilder {
 
@@ -261,9 +213,9 @@ public class Client implements Serializable {
         return !((this._id == null && other._id != null) || (this._id != null && !this._id.equals(other._id)));
     }
 
-    @Override
-    public String toString() {
-        return "tp2_jpa.Client[ _id=" + _id + " ]";
-    }
+    //@Override
+    //public String toString() {
+    //    return "tp2_jpa.Client[ _id=" + _id + " ]";
+    //}
     
 }
